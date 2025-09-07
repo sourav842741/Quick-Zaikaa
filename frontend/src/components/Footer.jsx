@@ -9,7 +9,7 @@ function Footer() {
         {/* Logo */}
         <div className="flex items-center gap-2 justify-center md:justify-start">
           <FaUtensils className="w-6 h-6" />
-          <h3 className="text-lg sm:text-xl font-bold tracking-wide">Vingo</h3>
+          <h3 className="text-lg sm:text-xl font-bold tracking-wide">Quick Zaika</h3>
         </div>
 
         {/* Copyright */}

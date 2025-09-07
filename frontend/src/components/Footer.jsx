@@ -14,7 +14,7 @@ function Footer() {
 
         {/* Copyright */}
         <p className="text-xs sm:text-sm text-orange-100">
-          &copy; {new Date().getFullYear()} Vingo Food Delivery. All rights reserved.
+          &copy; {new Date().getFullYear()} Quick Zaika Food Delivery. All rights reserved.
         </p>
       </div>
     </footer>

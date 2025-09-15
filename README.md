@@ -15,7 +15,7 @@
 
 | Home Page | Restaurant List | Cart |
 |-----------|-----------------|------|
-| ![Home](./screenshots/home.png) | ![Restaurant List](./screenshots/restaurant-list.png) | ![Cart](./screenshots/cart.png) |
+| ![Home](https://github.com/sourav842741/Quick-Zaikaa/blob/ab962b13307995743c08f6a4c97a3b7f1f64c0db/Screenshot%202025-09-15%20181501.png) | ![Restaurant List](./screenshots/restaurant-list.png) | ![Cart](./screenshots/cart.png) |
 
 ---
 

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
 import useCurrentLocation from "../hooks/useCurrentLocation";
 
-const GEOAPIFY_API_KEY = "812d749999de462e9df7ca070383975b"; // Geoapify API key
+const GEOAPIFY_API_KEY = "bafe579858a34679b568f4f569d5503c"; // Geoapify API key
 
 // Fix Leaflet default icons
 delete L.Icon.Default.prototype._getIconUrl;

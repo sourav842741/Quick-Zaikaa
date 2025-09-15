@@ -13,9 +13,9 @@
 
 > Screenshots of the website.
 
-| Home Page | Owner Dashboard | Cart |
+| Home Page | Owner Dashboard | Delivery Boy Dashboard |
 |-----------|-----------------|------|
-| ![Home](https://github.com/sourav842741/Quick-Zaikaa/blob/ab962b13307995743c08f6a4c97a3b7f1f64c0db/Screenshot%202025-09-15%20181501.png) | ![Restaurant List](https://github.com/sourav842741/Quick-Zaikaa/blob/5e3f0d6dc0ea862013910e0069707d7f12d5b4c8/Screenshot%202025-09-15%20181423.png) | ![Cart](./screenshots/cart.png) |
+| ![Home](https://github.com/sourav842741/Quick-Zaikaa/blob/ab962b13307995743c08f6a4c97a3b7f1f64c0db/Screenshot%202025-09-15%20181501.png) | ![Owner Dashboard](https://github.com/sourav842741/Quick-Zaikaa/blob/5e3f0d6dc0ea862013910e0069707d7f12d5b4c8/Screenshot%202025-09-15%20181423.png) | ![Delivery Boy Dashboard](https://github.com/sourav842741/Quick-Zaikaa/blob/78719f8d107767a62ace8e9571d23b61f136df0b/Screenshot%202025-09-15%20181556.png) |
 
 ---
 

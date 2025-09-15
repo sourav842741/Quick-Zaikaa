@@ -27,7 +27,7 @@ import updateLocation from './hooks/updateLocation'
 import TrackOrderPage from './pages/TrackOrderPage'
 import MyDeliveredOrders from './pages/MyDeliveredOrders'
 import ShopItems from './pages/ShopItems'
-export const serverUrl="https://quick-zaikaa.onrender.com"
+export const serverUrl="http://localhost:8000"
 
 function App() {
   const {userData,allShops,socket}=useSelector(state=>state.user)

@@ -256,7 +256,7 @@ export const updateOwnerOrderStatus = async (req, res) => {
           location: {
             $near: {
               $geometry: { type: "Point", coordinates: [Number(longitude), Number(latitude)] },
-              $maxDistance: 5000000000000000000000000000000
+              $maxDistance: 50000
             }
           }
         }).select("_id fullName mobile socketId location");

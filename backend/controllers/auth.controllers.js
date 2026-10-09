@@ -74,7 +74,11 @@ export const signIn=async (req,res)=>{
 
 export const signOut=async (req,res)=>{
     try {
-        res.clearCookie("token")
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        })
         return res.status(200).json({message:"sign out successfully"})
     } catch (error) {
         return res.status(500).json({message:`signout error ${error}`})
@@ -83,13 +87,18 @@ export const signOut=async (req,res)=>{
 export const googleAuth=async (req,res)=>{
     try {
         const {fullName,email,role,mobile}=req.body
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" })
+        }
+
         let user=await User.findOne({email})
         if(!user){
           user=await User.create({
-            fullName,
+            fullName: fullName || email.split("@")[0] || "User",
             email,
-            role,mobile
-        })
+            role: role || "user",
+            mobile: mobile || ""
+          })
         }
         const token=await genToken(user._id)
 
@@ -100,11 +109,11 @@ export const googleAuth=async (req,res)=>{
             sameSite:"none"
         })
 
-        return res.status(201).json(user)
+        return res.status(200).json(user)
 
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({message:`signupwithgoogle error ${error}`})
+        console.error("googleAuth error:", error)
+        return res.status(500).json({message:`signupwithgoogle error ${error.message || error}`})
     }
 }
 

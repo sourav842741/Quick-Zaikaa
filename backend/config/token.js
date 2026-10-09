@@ -5,7 +5,8 @@ try {
     const token= jwt.sign({userId},process.env.JWT_SECRET,{expiresIn:"10d"})
     return token
 } catch (error) {
-    return res.status(500).json(`gen token error ${error}`)
+    console.error("gen token error:", error)
+    throw error
 }
 }
 

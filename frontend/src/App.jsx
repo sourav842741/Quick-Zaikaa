@@ -27,7 +27,12 @@ import updateLocation from './hooks/updateLocation'
 import TrackOrderPage from './pages/TrackOrderPage'
 import MyDeliveredOrders from './pages/MyDeliveredOrders'
 import ShopItems from './pages/ShopItems'
-export const serverUrl="https://quick-zaikaaa.onrender.com"
+export const serverUrl =
+  import.meta.env.VITE_SERVER_URL ||
+  (typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ? "http://localhost:8000"
+    : "https://quick-zaikaaa.onrender.com");
 
 function App() {
   const {userData,allShops,socket}=useSelector(state=>state.user)

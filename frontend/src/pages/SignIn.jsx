@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaUtensils } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { serverUrl } from "../App";
@@ -13,143 +13,157 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  // Professional Food Delivery Theme
-  const primaryColor = "#ff4d2d"; // rich orange
-  const hoverColor = "#e64323"; // darker orange
-  const bgColor = "#fff9f6"; // light off-white background
-  const borderColor = "#ddd";
-const dispatch=useDispatch()
+  const dispatch = useDispatch();
+
   const handleSignIn = async () => {
+    if (!email || !password) {
+      setErrorMsg("Please fill in both email and password.");
+      return;
+    }
+    setErrorMsg("");
+    setLoading(true);
     try {
       const result = await axios.post(
         `${serverUrl}/api/auth/signin`,
         { email, password },
         { withCredentials: true }
       );
-     dispatch(setUserData(result.data))
+      dispatch(setUserData(result.data));
     } catch (error) {
-      console.log(error);
+      setErrorMsg(error?.response?.data?.message || "Sign in failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleAuth = async () => {
+    setErrorMsg("");
     try {
       const result = await signInWithPopup(auth, provider);
-      console.log(result);
-      if(result){
-        const {data}=await axios.post(`${serverUrl}/api/auth/googleauth`,{
-          email:result.user.email,
-        },{withCredentials:true})
-         dispatch(setUserData(data))
+      if (result) {
+        const { data } = await axios.post(
+          `${serverUrl}/api/auth/googleauth`,
+          {
+            fullName: result.user.displayName || "User",
+            email: result.user.email,
+            role: "user",
+            mobile: result.user.phoneNumber || "",
+          },
+          { withCredentials: true }
+        );
+        dispatch(setUserData(data));
       }
-
     } catch (error) {
-      console.log(error);
+      setErrorMsg(error?.response?.data?.message || "Google sign in failed.");
     }
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{ backgroundColor: bgColor }}
-    >
-      <div
-        className="bg-white rounded-xl shadow-lg w-full max-w-md p-8"
-        style={{ border: `1px solid ${borderColor}` }}
-      >
-        {/* Brand Heading */}
-        <h1 className="text-3xl font-bold mb-2" style={{ color: primaryColor }}>
-          Quick Zaika
-        </h1>
-        <p className="text-gray-600 mb-8">
-          Welcome back! Please sign in to continue enjoying delicious food
-          deliveries.
-        </p>
-
-        {/* Email */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Email</label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500"
-            style={{ borderColor: borderColor }}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        {/* Password */}
-        <div className="mb-2">
-          <label className="block text-gray-700 font-medium mb-1">
-            Password
-          </label>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              className="w-full border rounded-lg px-3 py-2 pr-10 focus:outline-none focus:border-orange-500"
-              style={{ borderColor: borderColor }}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-2.5 text-gray-500"
-            >
-              {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-            </button>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 selection:bg-[#E23744]/20 selection:text-[#E23744]">
+      <div className="bg-white rounded-3xl border border-gray-200/80 shadow-lg w-full max-w-md p-6 sm:p-8">
+        
+        {/* Brand Header */}
+        <div className="flex flex-col items-center text-center mb-6">
+          <div className="w-12 h-12 rounded-2xl bg-[#E23744] flex items-center justify-center text-white shadow-sm mb-3">
+            <FaUtensils className="w-6 h-6" />
           </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+            Quick<span className="text-[#E23744]">Zaika</span>
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">
+            Welcome back! Sign in to order your favorite dishes
+          </p>
         </div>
 
-        {/* Forgot Password Link */}
-        <div className="text-right mb-4">
-          <Link
-            to="/forgot-password"
-            style={{ color: primaryColor }}
-            className="text-sm font-medium hover:underline"
+        {/* Error Alert */}
+        {errorMsg && (
+          <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold">
+            {errorMsg}
+          </div>
+        )}
+
+        {/* Form Fields */}
+        <div className="space-y-4">
+          {/* Email */}
+          <div>
+            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+              Email Address
+            </label>
+            <input
+              type="email"
+              placeholder="name@example.com"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none focus:bg-white focus:border-[#E23744] focus:ring-2 focus:ring-[#E23744]/15 transition-all"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 pr-10 text-sm text-gray-800 placeholder-gray-400 outline-none focus:bg-white focus:border-[#E23744] focus:ring-2 focus:ring-[#E23744]/15 transition-all"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Forgot Password Link */}
+          <div className="text-right">
+            <Link
+              to="/forgot-password"
+              className="text-xs font-bold text-[#E23744] hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
+          {/* Sign In Button */}
+          <button
+            onClick={handleSignIn}
+            disabled={loading}
+            className="w-full bg-[#E23744] hover:bg-[#C92C38] text-white font-bold py-3 rounded-xl text-sm shadow-sm transition-all active:scale-98 cursor-pointer disabled:opacity-50"
           >
-            Forgot Password?
-          </Link>
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
+
+          {/* Divider */}
+          <div className="flex items-center my-4">
+            <div className="flex-1 border-t border-gray-200"></div>
+            <span className="px-3 text-xs text-gray-400 font-semibold uppercase tracking-wider">or</span>
+            <div className="flex-1 border-t border-gray-200"></div>
+          </div>
+
+          {/* Google Sign In */}
+          <button
+            onClick={handleGoogleAuth}
+            className="w-full bg-white hover:bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 flex items-center justify-center gap-2 text-sm font-semibold text-gray-700 transition-all shadow-2xs active:scale-98 cursor-pointer"
+          >
+            <FcGoogle size={18} />
+            <span>Continue with Google</span>
+          </button>
         </div>
 
-        {/* Sign In Button */}
-        <button
-          className="w-full font-semibold py-2 rounded-lg transition duration-200"
-          style={{ backgroundColor: primaryColor, color: "white" }}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.backgroundColor = hoverColor)
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.backgroundColor = primaryColor)
-          }
-          onClick={handleSignIn}
-        >
-          Sign In
-        </button>
-
-        {/* Google Auth */}
-        <button
-          className="w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition duration-200"
-          style={{ borderColor: borderColor }}
-          onClick={handleGoogleAuth}
-        >
-          <FcGoogle size={20} />
-          <span className="font-medium text-gray-700">
-            Sign in with Google
-          </span>
-        </button>
-
-        {/* No account yet */}
-        <p className="mt-6 text-center text-gray-600">
-          Don’t have an account?{" "}
-          <Link
-            to="/signup"
-            className="font-semibold"
-            style={{ color: primaryColor }}
-          >
+        {/* Sign Up Footer */}
+        <p className="mt-6 text-center text-xs text-gray-500">
+          Don't have an account?{" "}
+          <Link to="/signup" className="font-bold text-[#E23744] hover:underline">
             Sign Up
           </Link>
         </p>

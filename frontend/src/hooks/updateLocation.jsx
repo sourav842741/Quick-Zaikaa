@@ -6,31 +6,41 @@ import {  setShopsOfCity, setUserData } from '../redux/userSlice'
 
 function updateLocation() {
 const {userData,socket}=useSelector(state=>state.user)
-useEffect(()=>{
- 
-async function updateMyLocation(lat, lng) {
-  // API call
-  axios.post(serverUrl+"/api/user/update-location", {
-    latitude: lat,
-    longitude: lng
-  }, { withCredentials: true });
+  useEffect(() => {
+    if (!userData) return;
 
-  // Socket emit
-  socket?.emit("user:location:update", {
-    latitude: lat,
-    longitude: lng
-  });
-}
+    async function updateMyLocation(lat, lng) {
+      try {
+        await axios.post(
+          serverUrl + "/api/user/update-location",
+          {
+            latitude: lat,
+            longitude: lng,
+          },
+          { withCredentials: true }
+        );
 
-// Har thodi der me location bhejna
-navigator.geolocation.watchPosition(
-  (pos) => {
-    updateMyLocation(pos.coords.latitude, pos.coords.longitude);
-  },
-  (err) => console.error(err),
-  { enableHighAccuracy: false }
-);
-},[userData])
+        socket?.emit("user:location:update", {
+          latitude: lat,
+          longitude: lng,
+        });
+      } catch (err) {
+        // Location update error handled quietly
+      }
+    }
+
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        updateMyLocation(pos.coords.latitude, pos.coords.longitude);
+      },
+      (err) => console.error(err),
+      { enableHighAccuracy: false }
+    );
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, [userData, socket]);
 }
 
 export default updateLocation

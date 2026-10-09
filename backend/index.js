@@ -25,9 +25,30 @@ const app = express();
 
 const server = http.createServer(app);
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:3000",
+  "https://quick-zaikaa.onrender.com",
+  "https://quick-zaikaaa.onrender.com",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+const corsOriginCheck = (origin, callback) => {
+  if (!origin) return callback(null, true);
+  if (
+    allowedOrigins.includes(origin) ||
+    origin.startsWith("http://localhost:") ||
+    origin.endsWith(".onrender.com")
+  ) {
+    return callback(null, true);
+  }
+  return callback(new Error("Not allowed by CORS"));
+};
+
 const io = new Server(server, {
   cors: {
-    origin: "https://quick-zaikaa.onrender.com",
+    origin: corsOriginCheck,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -38,7 +59,7 @@ app.set("io", io);
 // ================= MIDDLEWARE =================
 app.use(
   cors({
-    origin: "https://quick-zaikaa.onrender.com",
+    origin: corsOriginCheck,
     credentials: true,
   })
 );
